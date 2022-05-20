@@ -73,8 +73,8 @@ class Scene {
 			dlight_z: 					9.6,
 
 			//camera
-			fov: 						50,
-			camera_initial_position: 	{ x: 0, y: 0, z: 7.5},
+			fov: 						35,
+			camera_initial_position: 	{ x: 0, y: 0, z: 12},
 			near: 						0.02,
 			far: 						100
 		};
