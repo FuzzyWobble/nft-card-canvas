@@ -24,11 +24,12 @@ class Scene {
 		},
 		this.settings = {
 			//scene
+			videoScale:					1.1,
 			background:					false,
 			background_color: 			"#ffffff",
 			background_opacity:			1,
-			fog_near: 					15, //8,
-			fog_depth: 					50, //25,
+			fog_near: 					15,
+			fog_depth: 					50,
 			exposure: 					0.9,
 			encoding: THREE.sRGBEncoding,
 			hdr: "BasicStudio.hdr",
@@ -160,7 +161,8 @@ class Scene {
 		const geometry = new THREE.PlaneGeometry( 16, 9 );
 		const material = new THREE.MeshNormalMaterial();
 		this.videoPlane = new THREE.Mesh(geometry, material)
-		this.videoPlane.position.z = -1.75;
+		this.videoPlane.position.z = -2;
+		this.videoPlane.scale.set(this.settings.videoScale,this.settings.videoScale,this.settings.videoScale);
 		this.scene.add(this.videoPlane);
 
 		this.vidTexture(this.videoPlane);
@@ -383,8 +385,9 @@ class Scene {
 				this.camera.position.z = val;
 			});
 
-
-
+		this.gui_scene.add(this.settings, 'videoScale', 0.1, 2, 0.01).name('Video Scale').onChange((val)=>{
+			this.videoPlane.scale.set(this.settings.videoScale,this.settings.videoScale,this.settings.videoScale);
+		});
 		this.gui_scene.add(this.settings, 'background').name('Show HDR').onChange((val)=>{
 			this.update_hdr();
 		});

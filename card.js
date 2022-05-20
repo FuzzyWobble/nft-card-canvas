@@ -33,7 +33,10 @@ class Card {
 			side: 			THREE.DoubleSide
 		}); //color: 'white', side: THREE.DoubleSide
 
-		// this.imageMat = new THREE.MeshStandardMaterial({ color: 'gray' })
+		const loader = new THREE.TextureLoader();
+		this.imageMat = new THREE.MeshStandardMaterial({ 
+			map: loader.load('assets/image/card_test.jpg'),
+		})
 
 		//-----------------------------------------------------------------------
 		//setup
@@ -69,7 +72,7 @@ class Card {
 
 	//=========================================================================================================
 	loadModel(_cb) {
-
+		
 		let _path = _G.ASSETS.card;
 		//let group = new THREE.Group();
 		this.gltf_loader.load(_path, (_gltf) => {
@@ -89,8 +92,9 @@ class Card {
                         child.material = this.cardMat;
                     }
 					if (child.name.includes("image")){
-                        console.log(child);
-                        // child.material = this.imageMat;
+                        child.material = this.imageMat;
+						child.material.map.flipY = false;
+						console.log(child.material);
                     }
 				}
 			});
