@@ -15,6 +15,11 @@ class Card {
 		this.settings = {
 			XrotateFactor:		0.5,
 			YrotateFactor:		0.25,
+			mx:					0,
+        	my: 				0,
+       		move_target:		new THREE.Vector3(0,0,0),
+        	move_value:			new THREE.Vector3(0,0,0),
+			lerp:				0.1,
 
 			cardColor:			"#ffffff",
 			cardRoughness:		0.5,
@@ -53,6 +58,7 @@ class Card {
 	init(_cb){ //called from init.js
 		this.loadModel(()=>{
 			this.init_interactions();
+			this.updating = true;
 			// this.setBackground();
 			// _G.MYSCENE.scene.add(this.group);
 			// _cb();
@@ -63,11 +69,14 @@ class Card {
 	init_interactions(){
 		//add camera move code here
 		window.onmousemove = (e) => {
-			let x = (e.clientX / window.innerWidth - 0.5) * 2;
-			let y = (e.clientY / window.innerHeight - 0.5) * 2;
+			this.settings.mx = (e.clientX / window.innerWidth - 0.5) * 2;
+			this.settings.my = (e.clientY / window.innerHeight - 0.5) * 2;
+
+			this.settings.move_target.set(this.settings.mx,this.settings.my,0);
+			
 			// console.log(x, y);
-			this.mesh.rotation.x = y * this.settings.YrotateFactor;
-			this.mesh.rotation.y = x * this.settings.XrotateFactor;
+			// this.mesh.rotation.x = y * this.settings.YrotateFactor;
+			// this.mesh.rotation.y = x * this.settings.XrotateFactor;
 		}
 	}
 
@@ -115,6 +124,9 @@ class Card {
 
 		if(!this.updating){return;}
 		this.update_counter++;
+		this.settings.move_value.lerp(this.settings.move_target,this.settings.lerp);
+		this.mesh.rotation.x = this.settings.move_value.y * this.settings.YrotateFactor;
+		this.mesh.rotation.y = this.settings.move_value.x * this.settings.XrotateFactor;
 
 	}
 
@@ -122,6 +134,7 @@ class Card {
 	setup_gui() {
 		this.gui_rotation.add(this.settings, "XrotateFactor", 0, 1, 0.01);
 		this.gui_rotation.add(this.settings, "YrotateFactor", 0, 1, 0.01);
+		this.gui_rotation.add(this.settings, "lerp", 0, 1, 0.01);
 
 		this.gui_materials.add(this.settings, "cardRoughness", 0, 1, 0.01).onChange((val)=>{
 			this.cardMat.roughness = val;

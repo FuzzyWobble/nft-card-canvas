@@ -226,8 +226,8 @@ class Scene {
 		if(!this.running){return;}
 		this.update_counter++;
 
-		if(_G.MYMAINMENU && _G.MYMAINMENU.updating) {
-			_G.MYMAINMENU.update();
+		if(_G.MYCARD) {
+			_G.MYCARD.update();
 		}
 
 		if(this.vtex){
