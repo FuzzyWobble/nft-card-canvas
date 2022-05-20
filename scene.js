@@ -32,7 +32,7 @@ class Scene {
 			fog_depth: 					50,
 			exposure: 					0.9,
 			encoding: THREE.sRGBEncoding,
-			hdr: "BasicStudio.hdr",
+			hdr: "ThreeSoftboxesStudio2.hdr",
 			envs: [
 				"None",
 				"BasicStudio.hdr",

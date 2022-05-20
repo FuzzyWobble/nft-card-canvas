@@ -23,6 +23,7 @@ class Card {
 			cardClearCoat:		0,
 			cardReflectivity:	0.5,
 		}
+
 		this.cardMat = new THREE.MeshPhysicalMaterial({
 			color:			this.settings.cardColor,
 			roughness: 		this.settings.cardRoughness,  
@@ -34,7 +35,7 @@ class Card {
 		}); //color: 'white', side: THREE.DoubleSide
 
 		const loader = new THREE.TextureLoader();
-		this.imageMat = new THREE.MeshStandardMaterial({ 
+		this.imageMat = new THREE.MeshBasicMaterial({ 
 			map: loader.load('assets/image/card_test.jpg'),
 		})
 
@@ -72,7 +73,7 @@ class Card {
 
 	//=========================================================================================================
 	loadModel(_cb) {
-		
+
 		let _path = _G.ASSETS.card;
 		//let group = new THREE.Group();
 		this.gltf_loader.load(_path, (_gltf) => {
