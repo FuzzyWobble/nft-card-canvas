@@ -13,34 +13,37 @@ class Card {
 		this.mesh;
 		this.gltf_loader = new THREE.GLTFLoader();
 		this.settings = {
-			XrotateFactor:		0.5,
-			YrotateFactor:		0.25,
-			mx:					0,
-        	my: 				0,
-       		move_target:		new THREE.Vector3(0,0,0),
-        	move_value:			new THREE.Vector3(0,0,0),
-			lerp:				0.1,
+			XrotateFactor:			0.5,
+			YrotateFactor:			0.25,
+			mx:						0,
+        	my: 					0,
+       		move_target:			new THREE.Vector3(0,0,0),
+        	move_value:				new THREE.Vector3(0,0,0),
+			lerp:					0.1,
 
-			cardColor:			"#ffffff",
-			cardRoughness:		0.5,
-			cardTransmission: 	1,
-			cardThickness:		0.33,
-			cardClearCoat:		0,
-			cardReflectivity:	0.5,
+			borderColor:			"#ffffff",
+			borderRoughness:		0.5,
+			borderTransmission: 	1,
+			borderThickness:		0.33,
+			borderClearCoat:		0,
+			borderReflectivity:		0.5,
+
+			cardRoughness:			1,
+			cardMetalness:			0,
 		}
 
 		this.cardMat = new THREE.MeshPhysicalMaterial({
-			color:			this.settings.cardColor,
-			roughness: 		this.settings.cardRoughness,  
-			transmission: 	this.settings.cardTransmission,
-			thickness:		this.settings.cardThickness,
-			clearcoat:		this.settings.cardClearCoat,
-			reflectivity:	this.settings.cardReflectivity,
+			color:			this.settings.borderColor,
+			roughness: 		this.settings.borderRoughness,  
+			transmission: 	this.settings.borderTransmission,
+			thickness:		this.settings.borderThickness,
+			clearcoat:		this.settings.borderClearCoat,
+			reflectivity:	this.settings.borderReflectivity,
 			side: 			THREE.DoubleSide
 		}); //color: 'white', side: THREE.DoubleSide
 
 		const loader = new THREE.TextureLoader();
-		this.imageMat = new THREE.MeshBasicMaterial({ 
+		this.imageMat = new THREE.MeshStandardMaterial({ 
 			map: loader.load('assets/image/card_test.jpg'),
 		})
 
@@ -136,20 +139,27 @@ class Card {
 		this.gui_rotation.add(this.settings, "YrotateFactor", 0, 1, 0.01);
 		this.gui_rotation.add(this.settings, "lerp", 0, 1, 0.01);
 
-		this.gui_materials.add(this.settings, "cardRoughness", 0, 1, 0.01).onChange((val)=>{
+		this.gui_materials.add(this.settings, "borderRoughness", 0, 1, 0.01).onChange((val)=>{
 			this.cardMat.roughness = val;
 		});
-		this.gui_materials.add(this.settings, "cardTransmission", 0, 1, 0.01).onChange((val)=>{
+		this.gui_materials.add(this.settings, "borderTransmission", 0, 1, 0.01).onChange((val)=>{
 			this.cardMat.transmission = val;
 		});
-		this.gui_materials.add(this.settings, "cardThickness", 0, 1, 0.01).onChange((val)=>{
+		this.gui_materials.add(this.settings, "borderThickness", 0, 1, 0.01).onChange((val)=>{
 			this.cardMat.thickness = val;
 		});
-		this.gui_materials.add(this.settings, "cardClearCoat", 0, 1, 0.01).onChange((val)=>{
+		this.gui_materials.add(this.settings, "borderClearCoat", 0, 1, 0.01).onChange((val)=>{
 			this.cardMat.clearcoat = val;
 		});
-		this.gui_materials.add(this.settings, "cardReflectivity", 0, 1, 0.01).onChange((val)=>{
+		this.gui_materials.add(this.settings, "borderReflectivity", 0, 1, 0.01).onChange((val)=>{
 			this.cardMat.reflectivity = val;
+		});
+
+		this.gui_materials.add(this.settings, "cardRoughness", 0, 1, 0.01).onChange((val)=>{
+			this.imageMat.roughness = val;
+		});
+		this.gui_materials.add(this.settings, "cardMetalness", 0, 1, 0.01).onChange((val)=>{
+			this.imageMat.metalness = val;
 		});
 	}
 
