@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+		<title>NFT CARD</title>
+		<link rel="stylesheet" href="css.css" />
+	</head>
+	<body>
+
+		<div id="mythree">
+
+			<div id="mygui"></div> 
+
+			<canvas id="mycanvas"></canvas> 
+			<div id="canvasbg"></div> 
+
+		</div>
+
+		<!-- ======================================================================== -->
+		<!-- js -->
+		<script src="libs/utils/util-video-texture.js"></script> <!-- v2 -->
+		<script src="libs/three.min.js"></script>
+		<script src="libs/GLTFLoader.js"></script>
+		<script src="libs/dat.gui.min.js"></script>
+		<script src="libs/OrbitControls.js"></script>
+		<script src="libs/RGBELoader.js"></script>
+		<script src="vars.js"></script>
+		<script src="scene.js"></script>
+		<script src="card.js"></script>
+		<script src="init.js"></script>
+		<!-- <script>
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			this.container = document.getElementById("mycanvas");
+			console.log("!!!", this.container);
+			this.renderer = new THREE.WebGLRenderer({ canvas:this.container, antialias:true, alpha:true });
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			const geometry = new THREE.BoxGeometry();
+			const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+			const cube = new THREE.Mesh( geometry, material );
+			scene.add( cube );
+
+			camera.position.z = 5;
+
+			function animate() {
+				requestAnimationFrame( animate );
+
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+
+				renderer.render( scene, camera );
+			};
+
+			animate();
+		</script> -->
+
+	</body>
+</html>
