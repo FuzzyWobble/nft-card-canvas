@@ -26,7 +26,7 @@ class Scene {
 			//scene
 			videoScale:					1.1,
 			background:					false,
-			background_color: 			"#ffffff",
+			background_color: 			"#c4cccf",
 			background_opacity:			1,
 			fog_near: 					15,
 			fog_depth: 					50,
@@ -159,7 +159,7 @@ class Scene {
 		}
 
 		const geometry = new THREE.PlaneGeometry( 16, 9 );
-		const material = new THREE.MeshNormalMaterial();
+		const material = new THREE.MeshBasicMaterial();
 		this.videoPlane = new THREE.Mesh(geometry, material)
 		this.videoPlane.position.z = -2;
 		this.videoPlane.scale.set(this.settings.videoScale,this.settings.videoScale,this.settings.videoScale);
