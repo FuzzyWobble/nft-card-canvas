@@ -1,7 +1,10 @@
 class Card {
 
 	//=========================================================================================================
-	constructor(){
+	constructor(_imgurl,_pts){
+
+		this.imgurl = _imgurl;
+		this.pts = _pts;
 
 		this.group = new THREE.Group();
 		this.debug = false; //true for logs
@@ -13,22 +16,24 @@ class Card {
 		this.mesh;
 		this.gltf_loader = new THREE.GLTFLoader();
 		this.settings = {
-			XrotateFactor:			0.5,
-			YrotateFactor:			0.25,
+
+			XrotateFactor:			0.75,
+			YrotateFactor:			0.50,
 			mx:						0,
         	my: 					0,
        		move_target:			new THREE.Vector3(0,0,0),
         	move_value:				new THREE.Vector3(0,0,0),
-			lerp:					0.1,
+			lerp:					0.06,
 
 			borderColor:			"#ffffff",
 			borderRoughness:		0.5,
+			borderMetalness: 		0,
 			borderTransmission: 	1,
 			borderThickness:		0.33,
 			borderClearCoat:		0,
 			borderReflectivity:		0.5,
 
-			cardRoughness:			1,
+			cardRoughness:			0.33,
 			cardMetalness:			0,
 
 			infoDebug:				false,
@@ -36,33 +41,46 @@ class Card {
 
 		this.tempPt = new THREE.Vector3();
 
-		this.infoPoints = [
-			{
-				name:	'point1',
-				div: 	document.getElementById('point1'),
-				x:		0.24,
-				y:		0.39,
-				pt:		undefined,
-			},
-			{
-				name:	'point2',
-				div: 	document.getElementById('point2'),
-				x:		0.88,
-				y:		-0.62,
-				pt:		undefined,
-			},
-			{
-				name:	'point3',
-				div: 	document.getElementById('point3'),
-				x:		-0.62,
-				y:		0.01,
-				pt:		undefined,
-			}
-		]
+		this.infoPoints = [];
+		for(var p=0;p<this.pts.length;p++){
+			var n = 'point'+(p+1);
+			this.infoPoints.push({
+					name:	n,
+					div: 	document.getElementById(n),
+					x:		this.pts[p].x,
+					y:		this.pts[p].y,
+					pt:		undefined,
+			});
+		}
+
+		// this.infoPoints = [
+		// 	{
+		// 		name:	'point1',
+		// 		div: 	document.getElementById('point1'),
+		// 		x:		0.24,
+		// 		y:		0.39,
+		// 		pt:		undefined,
+		// 	},
+		// 	{
+		// 		name:	'point2',
+		// 		div: 	document.getElementById('point2'),
+		// 		x:		0.88,
+		// 		y:		-0.62,
+		// 		pt:		undefined,
+		// 	},
+		// 	{
+		// 		name:	'point3',
+		// 		div: 	document.getElementById('point3'),
+		// 		x:		-0.62,
+		// 		y:		0.01,
+		// 		pt:		undefined,
+		// 	}
+		// ]
 
 		this.cardMat = new THREE.MeshPhysicalMaterial({
 			color:			this.settings.borderColor,
-			roughness: 		this.settings.borderRoughness,  
+			roughness: 		this.settings.cardRoughness,  
+			metalness: 		this.settings.cardMetalness,
 			transmission: 	this.settings.borderTransmission,
 			thickness:		this.settings.borderThickness,
 			clearcoat:		this.settings.borderClearCoat,
@@ -72,7 +90,9 @@ class Card {
 
 		const loader = new THREE.TextureLoader();
 		this.imageMat = new THREE.MeshStandardMaterial({ 
-			map: loader.load('assets/image/card_test.jpg'),
+			map: 			loader.load(this.imgurl),
+			roughness: 		this.settings.cardRoughness,  
+			metalness: 		this.settings.cardMetalness,
 		})
 
 		this.infoMat = new THREE.MeshStandardMaterial({ color: 'coral', visible: this.settings.infoDebug });

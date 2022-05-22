@@ -1,7 +1,14 @@
 class Scene {
 
 	//=========================================================================================================
-	constructor() {
+	constructor(_vidurl) {
+
+		this.vidurl = _vidurl;
+
+		_G.DATGUI = new dat.GUI({ autoPlace: false, width: 300 });
+		var customContainer = document.getElementById("mygui");
+		customContainer.appendChild(_G.DATGUI.domElement);
+		_G.DATGUI.close();	
 
 		//-----------------------------------------------------------------------
 		//vars
@@ -187,28 +194,26 @@ class Scene {
 
 	//=========================================================================================================
 	vidTexture(_child){
+
 		this.vtex = [
 			{
-				vtexture: undefined,
-				vmat: new THREE.MeshBasicMaterial({
-					color: 0xffffff,
-					// roughness: 0.95,metalness: 0.05,
-				}),
-				uid: "billboard_world1_1",
-				url: "assets/video/bg_test.mp4",
-				mesh_name: "vtex_billboard1",
-				mesh: undefined,
-				three: _G.MYSCENE,
-				resolution: { x: 1920, y: 1080 },
-				offset: { x: 0, y: 0 },
-				repeat: { x: 1, y: 1 },
-				animation: { x: 0, y: 0 },
-				rotation: 0,
-				threshold: 20,
-				audio: false,
-				muted: true,
+				vtexture: 				undefined,
+				vmat: 					new THREE.MeshBasicMaterial({color:0xffffff}),
+				uid: 					"billboard_world1_1",
+				url: 					this.vidurl,
+				mesh_name: 				"vtex_billboard1",
+				mesh: 					undefined,
+				three: 					_G.MYSCENE,
+				resolution: 			{ x: 1920, y: 1080 },
+				offset: 				{ x: 0, y: 0 },
+				repeat: 				{ x: 1, y: 1 },
+				animation: 				{ x: 0, y: 0 },
+				rotation: 				0,
+				threshold: 				20,
+				audio: 					false,
+				muted: 					true,
 			}
-		]
+		];
 		
 		console.log("Setting vtexture, " + this.vtex[0].mesh_name + "...");
 		this.vtex[0].mesh = _child;
@@ -218,6 +223,7 @@ class Scene {
 			console.log("Complete setting up vtexture");
 			this.vtex[0].vtexture.start();
 		});
+
 	}
 
 	//=========================================================================================================
