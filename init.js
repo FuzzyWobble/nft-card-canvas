@@ -1,3 +1,4 @@
+//=========================================================================================================
 window.onload = ()=>{
 
 	create_card_scene(
@@ -8,6 +9,7 @@ window.onload = ()=>{
 
 };
 
+//=========================================================================================================
 function create_card_scene(_img,_vid,_pts){
 
 	var pts_html = '';
@@ -26,11 +28,13 @@ function create_card_scene(_img,_vid,_pts){
 	_G.MYSCENE = new Scene(_vid); //main scene and renderer
 	_G.MYCARD = new Card(_img,_pts);
 
-	_G.MYCARD.init();
-	_G.MYSCENE.start(); //start renderer
-
-	//need callbacks here for loading complete
-
+	_G.MYCARD.init(()=>{ //callback after card loads
+		if(_G.DEBUG){console.log("Initialize complete, starting renderer.");}
+		_G.MYSCENE.start(); //start renderer
+		var loading = document.getElementById("loading");
+		loading.style.display = "none";
+	});
+	
 }
 
 

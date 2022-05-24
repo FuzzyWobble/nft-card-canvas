@@ -5,10 +5,14 @@ class Scene {
 
 		this.vidurl = _vidurl;
 
-		_G.DATGUI = new dat.GUI({ autoPlace: false, width: 300 });
+		_G.DATGUI = new dat.GUI({ autoPlace:false, width:300 });
 		var customContainer = document.getElementById("mygui");
 		customContainer.appendChild(_G.DATGUI.domElement);
 		_G.DATGUI.close();	
+		if(_G.RELEASE){
+			var mygui = document.getElementById("mygui");
+			mygui.style.display = "none";
+		}
 
 		//-----------------------------------------------------------------------
 		//vars
@@ -123,13 +127,14 @@ class Scene {
 		this.camera.updateProjectionMatrix();
 		this.scene.add(this.camera);
 
-		//-----------------------------------------------------------------------
-		//Lights
 		this.scene.fog = new THREE.Fog(
 			this.settings.background_color,
 			this.settings.fog_near,
 			this.settings.fog_near + this.settings.fog_depth
 		);
+
+		//-----------------------------------------------------------------------
+		//Lights
 		this.dlight = new THREE.DirectionalLight();
 		this.dlight.visible = this.settings.dlight_visible;
 		this.dlight.intensity = this.settings.dlight_intensity;
@@ -145,7 +150,6 @@ class Scene {
 		this.dlight.shadow.camera.top = 50;
 		this.dlight.shadow.camera.right = 50;
 		this.scene.add(this.dlight);
-
 		this.hlight = new THREE.HemisphereLight(0xeeeeee, 0xaaaaaa, this.settings.hlight_intensity);
 		this.hlight.visible = this.settings.hlight_visible;
 		this.scene.add(this.hlight);
@@ -215,12 +219,13 @@ class Scene {
 			}
 		];
 		
-		console.log("Setting vtexture, " + this.vtex[0].mesh_name + "...");
+		
+		if(_G.DEBUG){console.log("Setting vtexture, " + this.vtex[0].mesh_name + "...");}
 		this.vtex[0].mesh = _child;
 		this.vtex[0].mesh.material = this.vtex[0].vmat;
 		this.vtex[0].vtexture = new VideoTexture(this.vtex[0]);
 		this.vtex[0].vtexture.init(()=>{
-			console.log("Complete setting up vtexture");
+			if(_G.DEBUG){console.log("Complete setting up vtexture");}
 			this.vtex[0].vtexture.start();
 		});
 
@@ -248,66 +253,13 @@ class Scene {
 			this.controls.update();
 		}
 
-		// if(!MYTIMER_FIN){
-		// 	MYTIMER = Date.now() - MYTIMER_START;
-		// 	var timeElapsed = new Date(MYTIMER);
-		// 	var hour = timeElapsed.getUTCHours();
-		// 	var min = timeElapsed.getUTCMinutes();
-		// 	var sec = timeElapsed.getUTCSeconds();
-		// 	var ms = timeElapsed.getUTCMilliseconds();
-		// 	var ms2 = ms/1000;
-		// 	ms2 = Math.round(ms2 * 100); // / 100
-		// 	//console.log(hour+":"+min+":"+sec+":"+ms);
-		// 	if(this.update_counter%2==0){
-		// 		var zero_append = "";
-		// 		if((''+ms2).length==1){zero_append = "0";}
-		// 		if((''+ms2).length==0){zero_append = "00";}
-		// 		// if(ms2.countDecimals()==1){zero_append = "0";}
-		// 		// if(ms2.countDecimals()==0){zero_append = "00";}
-		// 		var zero_prepend1 = "";
-		// 		if(sec<10){zero_prepend1 = "0";}
-		// 		var zero_prepend2 = "";
-		// 		if(min<10){zero_prepend2 = "0";}
-		// 		document.getElementById("time").innerHTML = zero_prepend2+""+min+":"+zero_prepend1+""+sec+":"+ms2+zero_append;
-		// 		// $("#timer").html(zero_prepend2+""+min+":"+zero_prepend1+""+sec+":"+ms2+zero_append);
-		// 	}
-		// }
+		this.run_render();
 
-		//fixed fps
-		if(this.fixed_fps){
-			this.dt = Date.now() - this.time;
-			if (this.dt < 1 / (this.fixed_fps / 1000)) {
-				//~41.6 for 24fps
-				this.wait(() => {
-					this.run_render();
-					this.time = Date.now();
-				});
-			}else{
-				// console.log("uhoh, slower than target 24fps");
-				this.run_render();
-				this.time = Date.now();
-			}
-		}else{
-			this.run_render();
-		}
 	}
 
 	//=========================================================================================================
 	run_render() {
 		this.renderer.render(this.scene, this.camera);
-	}
-
-	//=========================================================================================================
-	wait(_cb) {
-		setTimeout(() => {
-			this.dt = Date.now() - this.time;
-			if (this.dt < 1 / (this.fixed_fps / 1000)) {
-				//~41.6 for 24fps
-				this.wait(_cb);
-			} else {
-				_cb();
-			}
-		}, 5); //5ms
 	}
 
 	//=========================================================================================================
@@ -325,6 +277,7 @@ class Scene {
 		}
 	}
 
+	//=========================================================================================================
 	set_hdr() {
 		this.hdr_loader
 			.setPath( 'assets/hdr/' )
@@ -339,6 +292,7 @@ class Scene {
 			} );
 	}
 
+	//=========================================================================================================
 	update_hdr() {
 		this.hdr_loader
 			.setPath( 'assets/hdr/' )
@@ -363,13 +317,6 @@ class Scene {
 			.name("Camera FOV")
 			.onChange((val) => {
 				this.camera.fov = val;
-				// console.log(this.camera.position);
-				// var pi = Math.PI;
-				// var zoomDistance = 3 / (2 * Math.tan(0.5 * (val * (pi/180))));
-				// var factor = zoomDistance/this.camera.position.length();
-				// this.camera.position.x *= factor;
-				// this.camera.position.y *= factor;
-				// this.camera.position.z *= factor;
 				this.camera.updateProjectionMatrix();
 			});
 		this.gui_camera
@@ -404,16 +351,13 @@ class Scene {
 			.add(this, "debug")
 			.name("DEBUG")
 			.onChange((val) => {
-				console.log("debug", val)
+				//console.log("debug", val)
 			});
 		this.gui_scene
 			.add(this.settings, "encoding", this.encoding_settings)
 			.name("TEXTURE ENCODING")
 			.onChange((val) => {
-				console.log(val);
-				console.log(typeof(val));
 				var val2 = parseInt(val);
-				console.log(typeof(val2));
 				_G.MYSCENE.renderer.outputEncoding = val2;
 			});
 		this.gui_scene.add(this.settings, "fog_near", 0, 20, 1).onChange((val) => {
