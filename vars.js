@@ -2,7 +2,7 @@ var _G = {
     RELEASE:                        false, //set true to hide gui
     DEBUG:                          true, //set true for console logs
     ASSETS: {
-                                    card: "assets/gltf/card.glb", //3d file for card
+                                    card: "assets/gltf/card2.glb", //3d file for card
     },
     DATGUI:                         undefined, //datgui
     MYSCENE:                        undefined, //scene.js

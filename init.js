@@ -2,7 +2,7 @@
 window.onload = ()=>{
 
 	create_card_scene(
-		"assets/image/card_test.jpg",
+		"assets/image/card_test2.jpg",
 		"assets/video/bg_test_large.mp4",
 		[{x:0.24,y:0.39},{x:0.88,y:-0.62},{x:-0.62,y:0.01}]
 	);

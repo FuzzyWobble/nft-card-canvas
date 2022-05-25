@@ -341,15 +341,9 @@ class VideoTexture{
                         child.material.needsUpdate = true;
                     }
                 });
-
             }
-
-
-
             this.ready = true;
-
             _cb(this.texture);
-
         });
 
     }
