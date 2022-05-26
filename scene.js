@@ -37,7 +37,7 @@ class Scene {
 			//scene
 			videoScale:					1.1,
 			background:					false,
-			background_color: 			"#c4cccf",
+			background_color: 			"#C4CBCF",
 			background_opacity:			1,
 			fog_near: 					15,
 			fog_depth: 					50,

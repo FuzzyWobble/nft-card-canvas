@@ -99,7 +99,7 @@ class Card {
 		this.infoPoints[_i].pt = new THREE.Mesh(geometry, this.infoMat)
 		this.infoPoints[_i].pt.position.x = _x * 3.2 / 2;
 		this.infoPoints[_i].pt.position.y = _y * 4.45 / 2;
-		// this.videoPlane.scale.set(this.settings.videoScale,this.settings.videoScale,this.settings.videoScale);
+
 		_parent.add(this.infoPoints[_i].pt);
 		let ptGui = this.gui_infoPts.addFolder(_name);
 		ptGui.add(this.infoPoints[_i], "x", -1, 1, 0.01).onChange((val)=>{
@@ -113,11 +113,66 @@ class Card {
 	//=========================================================================================================
 	init_interactions(){
 		
-		window.onmousemove = (e) => {
-			this.settings.mx = (e.clientX / window.innerWidth - 0.5) * 2;
-			this.settings.my = (e.clientY / window.innerHeight - 0.5) * 2;
-			this.settings.move_target.set(this.settings.mx,this.settings.my,0);
+		console.log("phone???", _G.MYDETECT.is_mobile);
+		if(!_G.MYDETECT.is_mobile){
+			window.onmousemove = (e) => {
+				this.settings.mx = (e.clientX / window.innerWidth - 0.5) * 2;
+				this.settings.my = (e.clientY / window.innerHeight - 0.5) * 2;
+				this.settings.move_target.set(this.settings.mx,this.settings.my,0);
+			}
+		} else if(typeof DeviceMotionEvent.requestPermission === 'function') {
+			this.infoPoints[0].div.addEventListener('click', (e)=>{
+				this.infoPoints[0].div.innerHTML = "clicked";
+				DeviceOrientationEvent.requestPermission()
+					.then(response => {
+					if (response == 'granted') {
+						let x_init = undefined;
+						let y_init = undefined;
+						window.addEventListener('deviceorientation', e => {
+							if(!x_init){
+								x_init = e.gamma;
+								y_init = e.beta;
+							}
+							var x = e.gamma - x_init;  // In degree in the range [-180,180)
+							var y = e.beta - y_init; // In degree in the range [-90,90)
+							if (x >  30) { x =  30};
+							if (x < -30) { x = -30};
+							if (y >  30) { y =  30};
+							if (y < -30) { y = -30};
+							x /= -30;
+							y /= -30;
+				
+							this.infoPoints[0].div.innerHTML = x_init;
+							this.infoPoints[1].div.innerHTML = y_init;
+							
+				
+							this.settings.move_target.set(x,y,0);
+						});
+					}
+					})
+			})
 		}
+
+		// function handleOrientation(event) {
+			
+		// 	output.textContent  = `beta : ${x}\n`;
+		// 	output.textContent += `gamma: ${y}\n`;
+		  
+		// 	// Because we don't want to have the device upside down
+		// 	// We constrain the x value to the range [-90,90]
+			
+		  
+		// 	// To make computation easier we shift the range of
+		// 	// x and y to [0,180]
+			
+		  
+		// 	// 10 is half the size of the ball
+		// 	// It center the positioning point to the center of the ball
+		// 	ball.style.top  = (maxY*y/180 - 10) + "px";
+		// 	ball.style.left = (maxX*x/180 - 10) + "px";
+		//   }
+		  
+		  
 
 	}
 
