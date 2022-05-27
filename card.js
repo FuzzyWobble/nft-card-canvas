@@ -88,6 +88,8 @@ class Card {
 		this.loadModel(()=>{
 			this.init_interactions();
 			this.updating = true;
+			this.mesh.position.y = -7;
+			this.mesh.position.z = -3;
 			_cb();
 		});
 	}
@@ -254,6 +256,12 @@ class Card {
 
 		});
 
+	}
+
+	scrollAnimate(_scrollPercent){
+		console.log(this.mesh.position);
+		this.mesh.position.y = Math.min((_scrollPercent - 30) * 0.1 - 7, 0);
+		this.mesh.position.z = Math.min((_scrollPercent - 30) * 0.05 - 3, 0);
 	}
 
 	//=========================================================================================================

@@ -49,6 +49,8 @@ class VideoTexture{
         this.audio_playing = false;
         this.video_playing = false;
         this.video;
+        this.img_loader;
+        this.currentFrame = 0;
 
         this.gui_material = {
 
@@ -126,9 +128,23 @@ class VideoTexture{
     init(_cb){
 
         if(this.type==="video"){ this.setup_texture_video(_cb); }
-        if(this.type==="image"){ this.setup_texture_image(_cb); }
+        if(this.type==="image"){ 
+            this.setup_texture_image(_cb); 
+        }
         if('audioFile' in this.settings){ this.setup_audio(); } //we can add audio to image
 
+    }
+
+    scroll(_scrollPercent){
+        if('startFrame' in this.settings && 'numFrames' in this.settings){
+            let frame = parseInt(_scrollPercent);
+            if(frame >= this.settings.numFrames){
+                frame = this.settings.startFrame + this.settings.numFrames;
+            } else {
+                frame += this.settings.startFrame;
+            }
+            this.update_texture_image("assets/light_explode/light-explode-low-res0" + frame + ".jpg");
+        }
     }
 
     //========================================================================================
@@ -162,7 +178,6 @@ class VideoTexture{
                         this.texture.offset.y = Math.random();
                     }
                 }
-
             }
         }
 
@@ -319,9 +334,9 @@ class VideoTexture{
     //========================================================================================
     setup_texture_image(_cb){
 
-        var loader = new THREE.TextureLoader( _G.MYSCENE.manager);
+        this.img_loader = new THREE.TextureLoader();
 
-        loader.load( this.settings.url, (texture)=>{
+        this.img_loader.load( this.settings.url, (texture)=>{
 
             this.imageTexture = texture;
             this.texture = this.imageTexture;
@@ -345,7 +360,32 @@ class VideoTexture{
             this.ready = true;
             _cb(this.texture);
         });
+    }
 
+    //========================================================================================
+    update_texture_image(_url){
+        this.img_loader.load( _url, (texture)=>{
+
+            this.imageTexture = texture;
+            this.texture = this.imageTexture;
+
+            this.apply_texture_settings();
+
+            this.texture.needsUpdate = true;
+
+            if(this.settings.mesh){
+
+                //var m = new THREE.MeshBasicMaterial( { map:this.imageTexture, side:THREE.DoubleSide, skinning:true } );
+
+                this.settings.mesh.traverse((child)=>{
+                    if(child.isMesh && child.material){ 
+                        child.material.map = this.texture;
+                        child.material.side = THREE.DoubleSide;
+                        child.material.needsUpdate = true;
+                    }
+                });
+            }
+        });
     }
 
     //========================================================================================

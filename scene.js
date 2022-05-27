@@ -35,9 +35,9 @@ class Scene {
 		},
 		this.settings = {
 			//scene
-			videoScale:					1.1,
+			videoScale:					0.8,
 			background:					false,
-			background_color: 			"#C4CBCF",
+			background_color: 			"#AEB3B7",
 			background_opacity:			1,
 			fog_near: 					15,
 			fog_depth: 					50,
@@ -169,10 +169,10 @@ class Scene {
 			});
 		}
 
-		const geometry = new THREE.PlaneGeometry( 16, 9 );
+		const geometry = new THREE.PlaneGeometry( 20, 14 );
 		const material = new THREE.MeshBasicMaterial();
 		this.videoPlane = new THREE.Mesh(geometry, material)
-		this.videoPlane.position.z = -2;
+		this.videoPlane.position.z = -3;
 		this.videoPlane.scale.set(this.settings.videoScale,this.settings.videoScale,this.settings.videoScale);
 		this.scene.add(this.videoPlane);
 
@@ -208,7 +208,7 @@ class Scene {
 				mesh_name: 				"vtex_billboard1",
 				mesh: 					undefined,
 				three: 					_G.MYSCENE,
-				resolution: 			{ x: 1920, y: 1080 },
+				resolution: 			{ x: 2000, y: 1400 },
 				offset: 				{ x: 0, y: 0 },
 				repeat: 				{ x: 1, y: 1 },
 				animation: 				{ x: 0, y: 0 },
@@ -216,6 +216,8 @@ class Scene {
 				threshold: 				20,
 				audio: 					false,
 				muted: 					true,
+				startFrame:				155,
+				numFrames:				60,
 			}
 		];
 		
