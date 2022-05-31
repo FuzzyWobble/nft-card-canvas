@@ -96,11 +96,11 @@ class Card {
 
 	//=========================================================================================================
 	init_infoPt(_parent, _i, _x, _y, _name){
-		//card dims(x,y) -> (3.2,4.45)
+		//card dims(x,y) -> (3.2,3.2)
 		const geometry = new THREE.SphereGeometry( 0.1, 16, 32 );
 		this.infoPoints[_i].pt = new THREE.Mesh(geometry, this.infoMat)
 		this.infoPoints[_i].pt.position.x = _x * 3.2 / 2;
-		this.infoPoints[_i].pt.position.y = _y * 4.45 / 2;
+		this.infoPoints[_i].pt.position.y = _y * 3.2 / 2;
 
 		_parent.add(this.infoPoints[_i].pt);
 		let ptGui = this.gui_infoPts.addFolder(_name);
@@ -108,7 +108,7 @@ class Card {
 			this.infoPoints[_i].pt.position.x = val * 3.2 / 2;
 		});
 		ptGui.add(this.infoPoints[_i], "y", -1, 1, 0.01).onChange((val)=>{
-			this.infoPoints[_i].pt.position.y = val * 4.45 / 2;
+			this.infoPoints[_i].pt.position.y = val * 3.2 / 2;
 		});
 	}
 
@@ -259,7 +259,7 @@ class Card {
 	}
 
 	scrollAnimate(_scrollPercent){
-		console.log(this.mesh.position);
+		// console.log(this.mesh.position);
 		this.mesh.position.y = Math.min((_scrollPercent - 30) * 0.1 - 7, 0);
 		this.mesh.position.z = Math.min((_scrollPercent - 30) * 0.05 - 3, 0);
 	}

@@ -1,9 +1,17 @@
 //=========================================================================================================
 window.onload = ()=>{
 
+	// document.body.scrollTo(0,0); //always start at top
+
 	create_card_scene(
 		"assets/image/card_test2.jpg",
-		"assets/light_explode/light-explode-low-res0155.jpg",
+		{
+			path:		"assets/light_explode/",
+			name:		"light-explode-low-res0",
+			fileType:	".jpg",
+			startFrame:	155,
+			numFrames:	60
+		},
 		// "assets/video/bg_test2.mp4",
 		[{x:0.24,y:0.39},{x:0.88,y:-0.62},{x:-0.62,y:0.01}]
 	);
@@ -11,7 +19,7 @@ window.onload = ()=>{
 };
 
 //=========================================================================================================
-function create_card_scene(_img,_vid,_pts){
+function create_card_scene(_img,_imgSeq,_pts){
 
 	var pts_html = '';
 	for(var p=0;p<_pts.length;p++){
@@ -27,7 +35,7 @@ function create_card_scene(_img,_vid,_pts){
 	document.getElementById("mythree").innerHTML = html;
 
 	_G.MYDETECT = new MyDetect();
-	_G.MYSCENE = new Scene(_vid); //main scene and renderer
+	_G.MYSCENE = new Scene(_imgSeq ); //main scene and renderer
 	_G.MYCARD = new Card(_img,_pts);
 
 	_G.MYCARD.init(()=>{ //callback after card loads
@@ -49,10 +57,20 @@ function create_card_scene(_img,_vid,_pts){
 		}
 		if(scrollPercent>30){
 			_G.MYCARD.scrollAnimate(scrollPercent);
+			if(scrollPercent<40){
+				_G.MYSCENE.blurMat.roughness = (scrollPercent - 30) / 40;
+				_G.MYSCENE.blurMat.reflectivity = (scrollPercent - 30) / 20;
+			} else {
+				_G.MYSCENE.blurMat.roughness = 0.25;
+				_G.MYSCENE.blurMat.reflectivity = 0.5;
+			}
 		}
-		
+		else{
+			_G.MYSCENE.blurMat.roughness = 0;
+			_G.MYSCENE.blurMat.reflectivity = 0;
+		}
 		document.getElementById('scrollProgress').innerText =
-			'Scroll Progress : ' + scrollPercent.toFixed(0)
+			'Scroll Progress : ' + scrollPercent.toFixed(2)
 	}
 	
 }

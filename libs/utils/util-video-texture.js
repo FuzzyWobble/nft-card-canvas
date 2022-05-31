@@ -28,11 +28,20 @@ class VideoTexture{
     constructor(_settings){
 
         this.settings = _settings;
-        if(this.settings.url.includes(".mp4")){
-            this.type="video";
-        }
-        if(this.settings.url.includes(".jpg")||this.settings.url.includes(".jpeg")||this.settings.url.includes(".png")){
-            this.type="image";
+        if(this.settings.fileType){
+            if(this.settings.fileType.includes(".mp4")){
+                this.type="video";
+            }
+            if(this.settings.fileType.includes(".jpg")||this.settings.url.includes(".jpeg")||this.settings.url.includes(".png")){
+                this.type="image";
+            }
+        } else {
+            if(this.settings.url.includes(".mp4")){
+                this.type="video";
+            }
+            if(this.settings.url.includes(".jpg")||this.settings.url.includes(".jpeg")||this.settings.url.includes(".png")){
+                this.type="image";
+            }
         }
 
         this.mesh = this.settings.mesh;
@@ -40,6 +49,8 @@ class VideoTexture{
             console.error("Mesh is not ready for util-texturing: "+this.settings.uid);
             return;
         }
+
+        this.textures = [];
         
         this.ready = false;
         this.update_counter = 0;
@@ -129,7 +140,11 @@ class VideoTexture{
 
         if(this.type==="video"){ this.setup_texture_video(_cb); }
         if(this.type==="image"){ 
-            this.setup_texture_image(_cb); 
+            if(this.settings.startFrame){
+                this.loadImgSeq(_cb);
+            } else {
+                this.setup_texture_image(_cb); 
+            }
         }
         if('audioFile' in this.settings){ this.setup_audio(); } //we can add audio to image
 
@@ -139,12 +154,47 @@ class VideoTexture{
         if('startFrame' in this.settings && 'numFrames' in this.settings){
             let frame = parseInt(_scrollPercent);
             if(frame >= this.settings.numFrames){
-                frame = this.settings.startFrame + this.settings.numFrames;
-            } else {
-                frame += this.settings.startFrame;
-            }
-            this.update_texture_image("assets/light_explode/light-explode-low-res0" + frame + ".jpg");
+                frame = this.settings.numFrames;
+            } //else {
+                // frame += this.settings.startFrame;
+            // }
+            this.update_texture_image(frame);
+            document.getElementById('frameProgress').innerText =
+			'Frame Progress : ' + frame + ' / ' + _G.MYSCENE.imgSeq.numFrames;
         }
+    }
+
+
+    //========================================================================================
+    loadImgSeq(_cb){
+
+        this.img_loader = new THREE.TextureLoader();
+        let start = this.settings.startFrame;
+        let end = this.settings.startFrame+this.settings.numFrames+1;
+
+        for(let i=start;i<end;i++){
+            let url = this.settings.url + this.settings.fileName + i + this.settings.fileType;
+            this.img_loader.load( url, (texture)=>{
+                this.textures[i-start] = texture; //force correct order
+                if(i==start){
+                    this.texture = this.textures[0];
+                    this.apply_texture_settings();
+                    this.texture.needsUpdate = true;
+                    if(this.settings.mesh){
+                        this.settings.mesh.traverse((child)=>{
+                            if(child.isMesh && child.material){ 
+                                child.material.map = this.texture;
+                                child.material.side = THREE.DoubleSide;
+                                child.material.needsUpdate = true;
+                            }
+                        });
+                    }
+                }
+            })
+        }
+        
+        _cb();
+
     }
 
     //========================================================================================
@@ -363,29 +413,43 @@ class VideoTexture{
     }
 
     //========================================================================================
-    update_texture_image(_url){
-        this.img_loader.load( _url, (texture)=>{
+    update_texture_image(_frame){
+        // console.log(_frame);
+        // console.log(this.textures);
+        this.texture = this.textures[_frame];
+        this.apply_texture_settings();
+        this.texture.needsUpdate = true;
+        if(this.settings.mesh){
+            this.settings.mesh.traverse((child)=>{
+                if(child.isMesh && child.material){ 
+                    child.material.map = this.texture;
+                    child.material.side = THREE.DoubleSide;
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+        // this.img_loader.load( _url, (texture)=>{
 
-            this.imageTexture = texture;
-            this.texture = this.imageTexture;
+        //     this.imageTexture = texture;
+        //     this.texture = this.imageTexture;
 
-            this.apply_texture_settings();
+        //     this.apply_texture_settings();
 
-            this.texture.needsUpdate = true;
+        //     this.texture.needsUpdate = true;
 
-            if(this.settings.mesh){
+        //     if(this.settings.mesh){
 
-                //var m = new THREE.MeshBasicMaterial( { map:this.imageTexture, side:THREE.DoubleSide, skinning:true } );
+        //         //var m = new THREE.MeshBasicMaterial( { map:this.imageTexture, side:THREE.DoubleSide, skinning:true } );
 
-                this.settings.mesh.traverse((child)=>{
-                    if(child.isMesh && child.material){ 
-                        child.material.map = this.texture;
-                        child.material.side = THREE.DoubleSide;
-                        child.material.needsUpdate = true;
-                    }
-                });
-            }
-        });
+        //         this.settings.mesh.traverse((child)=>{
+        //             if(child.isMesh && child.material){ 
+        //                 child.material.map = this.texture;
+        //                 child.material.side = THREE.DoubleSide;
+        //                 child.material.needsUpdate = true;
+        //             }
+        //         });
+        //     }
+        // });
     }
 
     //========================================================================================

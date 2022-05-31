@@ -1,9 +1,9 @@
 class Scene {
 
 	//=========================================================================================================
-	constructor(_vidurl) {
+	constructor(_imgSeq) {
 
-		this.vidurl = _vidurl;
+		this.imgSeq = _imgSeq;
 
 		_G.DATGUI = new dat.GUI({ autoPlace:false, width:300 });
 		var customContainer = document.getElementById("mygui");
@@ -35,7 +35,7 @@ class Scene {
 		},
 		this.settings = {
 			//scene
-			videoScale:					0.8,
+			videoScale:					1,
 			background:					false,
 			background_color: 			"#AEB3B7",
 			background_opacity:			1,
@@ -172,9 +172,25 @@ class Scene {
 		const geometry = new THREE.PlaneGeometry( 20, 14 );
 		const material = new THREE.MeshBasicMaterial();
 		this.videoPlane = new THREE.Mesh(geometry, material)
-		this.videoPlane.position.z = -3;
+		this.videoPlane.position.z = -5;
 		this.videoPlane.scale.set(this.settings.videoScale,this.settings.videoScale,this.settings.videoScale);
 		this.scene.add(this.videoPlane);
+
+		this.blurMat = new THREE.MeshPhysicalMaterial({
+			// color:			this.settings.borderColor,
+			roughness: 			0, //0.25,  
+			metalness: 			0,
+			transmission: 		1,
+			// thickness:		this.settings.borderThickness,
+			// clearcoat:		this.settings.borderClearCoat,
+			reflectivity:		0, //0.5,
+			// side: 			THREE.DoubleSide
+		});
+
+		this.blurPlane = new THREE.Mesh(geometry, this.blurMat)
+		this.blurPlane.position.z = -4.5;
+		this.blurPlane.scale.set(this.settings.videoScale,this.settings.videoScale,this.settings.videoScale);
+		this.scene.add(this.blurPlane);		
 
 		this.vidTexture(this.videoPlane);
 
@@ -204,7 +220,6 @@ class Scene {
 				vtexture: 				undefined,
 				vmat: 					new THREE.MeshBasicMaterial({color:0xffffff}),
 				uid: 					"billboard_world1_1",
-				url: 					this.vidurl,
 				mesh_name: 				"vtex_billboard1",
 				mesh: 					undefined,
 				three: 					_G.MYSCENE,
@@ -216,11 +231,13 @@ class Scene {
 				threshold: 				20,
 				audio: 					false,
 				muted: 					true,
-				startFrame:				155,
-				numFrames:				60,
+				url: 					this.imgSeq.path,
+				fileName:					this.imgSeq.name,
+				fileType:				this.imgSeq.fileType,
+				startFrame:				this.imgSeq.startFrame,
+				numFrames:				this.imgSeq.numFrames,
 			}
 		];
-		
 		
 		if(_G.DEBUG){console.log("Setting vtexture, " + this.vtex[0].mesh_name + "...");}
 		this.vtex[0].mesh = _child;
