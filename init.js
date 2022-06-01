@@ -66,6 +66,7 @@ function create_card_scene(_img,_imgSeq,_pts){
 			}
 		}
 		else{
+			_G.MYCARD.scrollAnimate(0);
 			_G.MYSCENE.blurMat.roughness = 0;
 			_G.MYSCENE.blurMat.reflectivity = 0;
 		}

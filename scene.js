@@ -35,7 +35,7 @@ class Scene {
 		},
 		this.settings = {
 			//scene
-			videoScale:					1,
+			videoScale:					1.33,
 			background:					false,
 			background_color: 			"#AEB3B7",
 			background_opacity:			1,
@@ -169,7 +169,7 @@ class Scene {
 			});
 		}
 
-		const geometry = new THREE.PlaneGeometry( 20, 14 );
+		const geometry = new THREE.PlaneGeometry( 40, 28 );
 		const material = new THREE.MeshBasicMaterial();
 		this.videoPlane = new THREE.Mesh(geometry, material)
 		this.videoPlane.position.z = -5;
@@ -188,7 +188,7 @@ class Scene {
 		});
 
 		this.blurPlane = new THREE.Mesh(geometry, this.blurMat)
-		this.blurPlane.position.z = -4.5;
+		this.blurPlane.position.z = -4.9;
 		this.blurPlane.scale.set(this.settings.videoScale,this.settings.videoScale,this.settings.videoScale);
 		this.scene.add(this.blurPlane);		
 
@@ -225,9 +225,10 @@ class Scene {
 				three: 					_G.MYSCENE,
 				resolution: 			{ x: 2000, y: 1400 },
 				offset: 				{ x: 0, y: 0 },
-				repeat: 				{ x: 1, y: 1 },
+				repeat: 				{ x: 3, y: 3 },
 				animation: 				{ x: 0, y: 0 },
 				rotation: 				0,
+				wrap:					THREE.RepeatWrapping,
 				threshold: 				20,
 				audio: 					false,
 				muted: 					true,
